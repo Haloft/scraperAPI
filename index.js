@@ -29,7 +29,7 @@ app.post("/api/products", async (req, res) => {
   const body = req.body;
 
   console.log(body.url);
-  const verkkisData = await scraper.scrapeVkPage(body.url);
+  const verkkisData = await scraper.scrapeVkPage('https://www.verkkokauppa.com/fi/product/' + body.url);
   console.log(verkkisData);
 
   const product = new Product({
@@ -45,6 +45,16 @@ app.post("/api/products", async (req, res) => {
     .catch(error => 
     console.log(error))
 });
+
+app.delete('/api/products/:id', (req, res) => {
+  Product.findByIdAndDelete(req.params.id)
+    .then(result => {
+    res.status(204).end()
+    })
+    .catch(error => {
+    console.log(error)
+  })
+}) 
 
 const UpdateDB = async () => {
   Product.find({}).then(products => {
